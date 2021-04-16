@@ -3,14 +3,25 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { LogsComponent } from './logs/logs.component';
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ImToPdfComponent } from './im-to-pdf/im-to-pd.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    LogsComponent,
+    ImToPdfComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule, 
+    FormsModule,
+    ReactiveFormsModule
+
+    
   ],
   providers: [],
   bootstrap: [AppComponent]
