@@ -41,8 +41,11 @@ export class ImToPdfComponent implements OnInit {
   // preview image
   updateImage(event){
 
+   this.visible_button_to_pdf = false ; 
+   this.upload_success = false ; 
+   
    this.fileToUpload = event.target.files.item(0) ; 
-
+  
    const f = (event.target as HTMLInputElement).files[0];
 
    // File Preview
