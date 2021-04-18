@@ -7,6 +7,11 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 You can access the app from https://pdfutilclient.herokuapp.com/imTopdf  
 This is a free server, hence the performance is bad and the app is sometimes too slow
 
+## Backend
+
+You can find the backend code at https://github.com/nassim-fox/pdfutil  
+Its a django rest framework application
+
 ## Development server
 
 If you use the app localy  
