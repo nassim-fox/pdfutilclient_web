@@ -2,9 +2,16 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.0.5.
 
+## Access the app
+
+You can access the app from https://pdfutilclient.herokuapp.com/imTopdf  
+This is a free server, hence the performance is bad and the app is sometimes too slow
+
 ## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+If you use the app localy  
+Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.  
+
 
 ## Code scaffolding
 
