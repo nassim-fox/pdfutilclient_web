@@ -15,7 +15,7 @@ const httpOptions = {
 
 export class ImToPdfService {
 
-  url : string ="http://127.0.0.1:8000" //"https://pdfutil.herokuapp.com" ; 
+  url : string = "https://pdfutil.herokuapp.com" ; 
 
   constructor(private httpClient: HttpClient) { }
 
