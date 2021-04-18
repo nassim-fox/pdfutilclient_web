@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ImToPdfService } from '../services/im-to-pdf-service.service';
 import {DomSanitizer} from '@angular/platform-browser';
+import { BehaviorSubject } from 'rxjs';
 
 
 @Component({
@@ -12,14 +13,21 @@ export class ImToPdfComponent implements OnInit {
 
   fileToUpload: File = null;
   imurl : string ; 
-  visible_button_upload : boolean = false ; 
+  visible_button_upload_im : boolean = false ;
+  visible_button_upload_pdf : boolean = false ; 
   visible_button_to_pdf : boolean = false ; 
-  upload_success : boolean = false ; 
+  visible_button_to_im : boolean = false ; 
+  upload_success_im : boolean = false ; 
+  upload_success_pdf : boolean = false ; 
   link_to_pdf : string ; 
   pdf_filename : string ; 
   link_to_zip : string ; 
   zip_filename : string ; 
   page : number ; 
+  uploading_im$ : BehaviorSubject<boolean> = new BehaviorSubject(false); 
+  uploading_pdf$ : BehaviorSubject<boolean> = new BehaviorSubject(false); 
+  transim$ :  BehaviorSubject<boolean> = new BehaviorSubject(false); 
+  transpdf$ :  BehaviorSubject<boolean> = new BehaviorSubject(false); 
   
 
   constructor(private imToPdfServce: ImToPdfService,private sanitizer:DomSanitizer) { }
@@ -29,26 +37,63 @@ export class ImToPdfComponent implements OnInit {
 
  
 
-  uploadFile() {
+  uploadFile(event,type: string) {
+
+
+    if(type=="im")
+    {
+      this.uploading_im$.next(true) ;
+    }else if(type=="pdf")
+    {
+      this.uploading_pdf$.next(true) ; 
+    } 
 
     this.imToPdfServce.upload(this.fileToUpload).subscribe(data => {
       
-      this.upload_success = true ; 
-      this.visible_button_to_pdf = true ; 
-
+      if(type=="im")
+      {
+       
+        this.upload_success_im = true ; 
+        this.visible_button_to_pdf = true ; 
+        this.uploading_im$.next(false) ; 
+      }
+      else if(type=="pdf")
+      {
+        this.upload_success_pdf = true ; 
+        this.visible_button_to_im = true ; 
+        this.uploading_pdf$.next(false) ; 
+      }
     }, error => {
       console.log(error);
-    });
+    } ) ;
+ 
+    
   }
 
   // preview image
-  updateImage(event){
+  updateImage(event,type: string){
 
    console.log("update image") ; 
    
+   if(type=="im")
+  {
+
    this.visible_button_to_pdf = false ; 
-   this.upload_success = false ; 
+   this.upload_success_im = false ; 
    this.pdf_filename = "" ; 
+   
+   // show upload button
+   this.visible_button_upload_im = true ; 
+
+  } else if(type="pdf")
+  {
+    this.visible_button_to_im = false ; 
+    this.upload_success_pdf = false ; 
+    this.pdf_filename = "" ; 
+    
+    // show upload button
+    this.visible_button_upload_pdf = true ; 
+  }
 
    this.fileToUpload = event.target.files.item(0) ; 
   
@@ -61,14 +106,15 @@ export class ImToPdfComponent implements OnInit {
    }
    reader.readAsDataURL(f)
 
-   // show upload button
-   this.visible_button_upload = true ; 
-
  }
 
  // to pdf
  toPdf()
  {
+
+  // for loading
+  this.transim$.next(true) ; 
+
   this.imToPdfServce.topdf(this.fileToUpload.name).subscribe(data => {
     
     var newBlob = new Blob([data], { type: "application/pdf" });
@@ -82,13 +128,18 @@ export class ImToPdfComponent implements OnInit {
 
     this.link_to_pdf = link.toString() ; 
     
-    this.upload_success = false ; 
+    this.upload_success_im = false ; 
 
     console.log(link) ; 
+
+    this.transim$.next(false) ; 
 
 
   }, error => {
     console.log(error);
+    
+    this.transim$.next(false) ;
+
   });
  }
 
@@ -96,12 +147,16 @@ export class ImToPdfComponent implements OnInit {
  // to images
  toImages()
  {
+  
+  //for loading
+  this.transpdf$.next(true) ; 
+
   console.log("toimages") ; 
   this.imToPdfServce.toimages(this.fileToUpload.name).subscribe(data => {
     const blob = new Blob([data], {
       type: 'application/zip'
     });
-    
+
     const url = window.URL.createObjectURL(blob);
     
     var link = document.createElement('a');
@@ -111,11 +166,15 @@ export class ImToPdfComponent implements OnInit {
 
     this.link_to_zip = link.toString() ; 
     
-    this.upload_success = false ; 
+    this.upload_success_pdf = false ; 
 
-    //window.open(url);
+    this.transpdf$.next(false) ; 
+  
   }, error => {
     console.log(error);
+    
+    this.transpdf$.next(false) ;
+
   });
  }
 
@@ -123,5 +182,11 @@ export class ImToPdfComponent implements OnInit {
   return this.sanitizer.bypassSecurityTrustResourceUrl(url) ;
 }
 
+
+initback()
+{
+  console.log("initback") ; 
+  this.visible_button_to_pdf = false ; 
+}
 
 }

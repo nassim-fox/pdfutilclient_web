@@ -9,10 +9,10 @@
  
 <ul class="nav nav-pills justify-content-center">
   <li>
-    <a class="active" id="home-tab" data-toggle="tab" href="#imtopdf" >Image To Pdf</a>
+    <a class="active" id="home-tab" data-toggle="tab" href="#imtopdf" (clik)="initback">Image To Pdf</a>
   </li>
   <li>
-    <a  id="profile-tab" data-toggle="tab" href="#pdftoim" >Pdf To Image</a>
+    <a  id="profile-tab" data-toggle="tab" href="#pdftoim" (click)="initback" >Pdf To Image</a>
   </li>
   
   </ul>
@@ -24,8 +24,8 @@
     <div class="container py-5">
 
         <header class="text-dark text-center">
-            <h1 class="display-4">Image To Pdf</h1>
-            <p class="lead mb-0"> Convert any image to pdf using Angular 11 and Django rest framework.</p>
+            <h1 class="display-4">Image To Pdf  <i class="fa fa-picture-o" style="margin-right: 2% ; "></i> <i class="fa fa-arrow-right" style="margin-right: 2% ; "></i> <i class="fa fa-file-pdf-o"></i></h1>
+            <p class="lead mb-0"> Convert any image to pdf.</p>
             <p class="mb-5 font-weight-dark"> by
                 <a href="https://github.com/nassim-fox" class="text-dark">
                     <u>Nassim Bouhadouf</u>
@@ -40,30 +40,38 @@
 
                 <!-- Upload image input-->
                 <div class="input-group mb-3 px-2 py-2 rounded-pill bg-white shadow-sm">
-                    <input id="upload" type="file"  (change)="updateImage($event)" class="form-control border-0" >
+                    <input id="upload" type="file"  (change)="updateImage($event,'im')" class="form-control border-0" accept="image/x-png,image/gif,image/jpeg" >
                     <label id="upload-label" for="upload" class="font-weight-light text-muted">Choose file</label>
                     <div class="input-group-append">
-                        <label for="upload" class="btn btn-light m-0 rounded-pill px-4"> <i class="fa fa-cloud-upload mr-2 text-muted"></i><small class="text-uppercase font-weight-bold text-muted">Choose file</small></label>
+                        <label for="upload" class="btn btn-light m-0 rounded-pill px-4"> <i class="fa fa-cloud-upload mr-2 text-muted"></i><small class="text-uppercase font-weight-bold text-muted">Choose Image</small></label>
                     </div>
                 </div>
 
                 <div class="row">
-                    <button id="upload_button" *ngIf="this.visible_button_upload" [disabled]="this.visible_button_to_pdf==1" class="btn btn-outline-primary col-sm-3" (click)="uploadFile($event)">upload</button>
+                    <button id="upload_button" *ngIf="this.visible_button_upload_im" [disabled]="this.visible_button_to_pdf==1" class="btn btn-outline-primary col-sm-3" (click)='uploadFile($event,"im")'>upload</button>
                     <div class="col-sm-3"></div>
                     <button id="to_pdf_button" *ngIf="this.visible_button_to_pdf" class="btn btn-outline-warning col-sm-3" (click)="toPdf($event)">To pdf</button>
                 </div>
 
-                <div *ngIf="!upload_success" class="row" style="margin-top:2% ;" >
+                <div *ngIf="!upload_success_im" class="row" style="margin-top:2% ;" >
                     <a target="_blank" [href]="sanitize(link_to_pdf)" [innerHtml]="pdf_filename"></a>
                 </div>                 
                 
-                <div *ngIf="upload_success" class="alert alert-success" role="alert" style="margin-top:2% ; ">
+                
+                <div *ngIf="uploading_im$ | async" class="alert alert-warning" role="alert" style="margin-top:2% ; ">
+                The file is being uploaded to server, please wait...
+                </div>
+
+                <div *ngIf="upload_success_im" class="alert alert-success" role="alert" style="margin-top:2% ; ">
                 The file is uploaded to server
                 </div>
 
+                <div *ngIf="transim$ | async" class="alert alert-warning" role="alert" style="margin-top:2% ; ">
+                The file is being converted to pdf, please wait...
+                </div>
+
                 <!-- Uploaded image area-->
-                <p class="font-italic text-white text-center">The image uploaded will be rendered inside the box below.</p>
-                <div class="image-area mt-4"><img id="imageResult" [src]="imurl" alt="" class="img-fluid rounded shadow-sm mx-auto d-block"></div>
+               <div class="image-area mt-4"><img id="imageResult" [src]="imurl" alt="" class="img-fluid rounded shadow-sm mx-auto d-block"></div>
 
             </div>
         </div>
@@ -77,8 +85,8 @@
     <div class="container py-5">
 
         <header class="text-dark text-center">
-            <h1 class="display-4">Pdf To Image</h1>
-            <p class="lead mb-0"> Convert pdf files to Images using Angular 11 and Django rest framework.</p>
+            <h1 class="display-4">Pdf To Image <i class="fa fa-file-pdf-o" style="margin-right: 2% ; "></i> <i class="fa fa-arrow-right" style="margin-right: 2% ; "></i> <i class="fa fa-picture-o"></i></h1>
+            <p class="lead mb-0"> Convert pdf files to Images.</p>
             <p class="mb-5 font-weight-dark"> by
                 <a href="https://github.com/nassim-fox" class="text-dark">
                     <u>Nassim Bouhadouf</u>
@@ -93,25 +101,34 @@
 
                 <!-- Upload image input-->
                 <div class="input-group mb-3 px-2 py-2 rounded-pill bg-white shadow-sm">
-                    <input id="upload" type="file"  (change)="updateImage($event)" class="form-control border-0" >
-                    <label id="upload-label" for="upload" class="font-weight-light text-muted">Choose file</label>
+                    <input id="upload_pdf" type="file"  (change)="updateImage($event,'pdf')" class="form-control border-0" accept="application/pdf,application/vnd.ms-excel" >
+                    <label id="upload-label" for="upload_pdf" class="font-weight-light text-muted">Choose file</label>
                     <div class="input-group-append">
-                        <label for="upload" class="btn btn-light m-0 rounded-pill px-4"> <i class="fa fa-cloud-upload mr-2 text-muted"></i><small class="text-uppercase font-weight-bold text-muted">Choose file</small></label>
+                        <label for="upload_pdf" class="btn btn-light m-0 rounded-pill px-4"> <i class="fa fa-cloud-upload mr-2 text-muted"></i><small class="text-uppercase font-weight-bold text-muted">Choose pdf</small></label>
                     </div>
                 </div>
 
                 <div class="row">
-                    <button id="upload_button" *ngIf="this.visible_button_upload" [disabled]="this.visible_button_to_pdf==1" class="btn btn-outline-primary col-sm-3" (click)="uploadFile($event)">upload</button>
+                    <button id="upload_button" *ngIf="this.visible_button_upload_pdf" [disabled]="this.visible_button_to_im==1" class="btn btn-outline-primary col-sm-3" (click)="uploadFile($event,'pdf')">upload</button>
                     <div class="col-sm-3"></div>
-                    <button id="to_pdf_button" *ngIf="this.visible_button_to_pdf" class="btn btn-outline-warning col-sm-3" (click)="toImages($event)">To images</button>
+                    <button id="to_pdf_button" *ngIf="this.visible_button_to_im" class="btn btn-outline-warning col-sm-3" (click)="toImages($event)">To images</button>
                 </div>
 
-                <div *ngIf="!upload_success" class="row" style="margin-top:2% ;" >
+                <div *ngIf="!upload_success_pdf" class="row" style="margin-top:2% ;" >
                     <a target="_blank" [href]="sanitize(link_to_zip)" [innerHtml]="zip_filename"></a>
                 </div>                 
                 
-                <div *ngIf="upload_success" class="alert alert-success" role="alert" style="margin-top:2% ; ">
+                <div *ngIf="uploading_pdf$ | async" class="alert alert-warning" role="alert" style="margin-top:2% ; ">
+                The file is being uploaded to server, please wait...
+                </div>
+
+
+                <div *ngIf="upload_success_pdf" class="alert alert-success" role="alert" style="margin-top:2% ; ">
                 The file is uploaded to server
+                </div>
+
+                <div *ngIf="transim$ | async" class="alert alert-warning" role="alert" style="margin-top:2% ; ">
+                The file is being converted to images, please wait...
                 </div>
 
                 <!-- Uploaded image area-->

@@ -4,6 +4,11 @@
     opacity: 0;
 }
 
+
+#upload_pdf {
+    opacity: 0;
+}
+
 #upload-label {
     position: absolute;
     top: 50%;
