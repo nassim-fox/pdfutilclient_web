@@ -1,3 +1,5 @@
+
+
 #upload {
     opacity: 0;
 }
@@ -37,4 +39,32 @@ body {
     min-height: 100vh;
     background-color: #757f9a;
     background-image: linear-gradient(147deg, #757f9a 0%, #d7dde8 100%);
+}
+
+
+
+
+
+
+.nav-pills {
+    border-bottom: 1px solid #ddd;
+}
+.nav-pills li a {
+    background: #1f4e79;
+    color: #fff;
+    display: block;
+    line-height: 2em;
+    padding: 7px 15px;
+    border-radius: 0;
+    font-size: 20px;
+    border: none;
+    margin: 30px 2px 0;
+}
+ul li a {
+    text-decoration: none;
+}
+.nav-pills li a.active {
+    background: #3482ca;
+    border: none;
+    color: #FFF;
 }

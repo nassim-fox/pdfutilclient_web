@@ -15,7 +15,7 @@ const httpOptions = {
 
 export class ImToPdfService {
 
-  url : string = "https://pdfutil.herokuapp.com" ; 
+  url : string ="http://127.0.0.1:8000" //"https://pdfutil.herokuapp.com" ; 
 
   constructor(private httpClient: HttpClient) { }
 
@@ -33,6 +33,12 @@ export class ImToPdfService {
   topdf(filename: string) : Observable<Blob>
   {
     return this.httpClient.get(this.url+"/imTopdf/"+filename,{responseType : "blob"}) ; 
+  }
+
+  toimages(filename: string)  
+  {
+    return this.httpClient.get(this.url+"/pdfToim/"+filename,{responseType : "arraybuffer"}) ; 
+
   }
 
 }

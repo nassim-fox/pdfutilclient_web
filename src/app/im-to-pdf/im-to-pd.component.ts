@@ -17,7 +17,10 @@ export class ImToPdfComponent implements OnInit {
   upload_success : boolean = false ; 
   link_to_pdf : string ; 
   pdf_filename : string ; 
-
+  link_to_zip : string ; 
+  zip_filename : string ; 
+  page : number ; 
+  
 
   constructor(private imToPdfServce: ImToPdfService,private sanitizer:DomSanitizer) { }
 
@@ -89,8 +92,36 @@ export class ImToPdfComponent implements OnInit {
   });
  }
 
+
+ // to images
+ toImages()
+ {
+  console.log("toimages") ; 
+  this.imToPdfServce.toimages(this.fileToUpload.name).subscribe(data => {
+    const blob = new Blob([data], {
+      type: 'application/zip'
+    });
+    
+    const url = window.URL.createObjectURL(blob);
+    
+    var link = document.createElement('a');
+    link.href = url ; 
+    this.zip_filename = this.fileToUpload.name.split('.').slice(0, -1).join('.')+".zip" ; 
+
+
+    this.link_to_zip = link.toString() ; 
+    
+    this.upload_success = false ; 
+
+    //window.open(url);
+  }, error => {
+    console.log(error);
+  });
+ }
+
  sanitize(url:string){
   return this.sanitizer.bypassSecurityTrustResourceUrl(url) ;
 }
+
 
 }

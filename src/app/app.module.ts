@@ -7,6 +7,8 @@ import { LogsComponent } from './logs/logs.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ImToPdfComponent } from './im-to-pdf/im-to-pd.component';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
+
 
 @NgModule({
   declarations: [
@@ -19,7 +21,8 @@ import { ImToPdfComponent } from './im-to-pdf/im-to-pd.component';
     AppRoutingModule,
     HttpClientModule, 
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    PdfViewerModule
 
     
   ],
